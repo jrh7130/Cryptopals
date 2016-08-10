@@ -1,6 +1,6 @@
 freqs = {
-    'a': 0.0651738,
-    'b': 0.0124248,
+    'txt': 0.0651738,
+    'key': 0.0124248,
     'c': 0.0217339,
     'd': 0.0349835,
     'e': 0.1041442,
@@ -28,34 +28,35 @@ freqs = {
     ' ': 0.1918182
 }
 
-def score(a):
+def score(txt):
     score = 0
-    for i in a:
+    global freqs
+    for i in txt:
         if i.lower() in freqs:
             i = i.lower()
             score += freqs[i]
     return score
 
-def xor(a,b):
-    if len(a) != len(b):
+def xor(txt,key):
+    if len(txt) != len(key):
         raise Exception("Unequal length")
     else:
-        a = int(a,16)
-        b = int(b,16)
-        x = hex(a ^ b)
-    return x[2:-1]
+        txt = int(txt,16)
+        key = int(key,16)
+        result = hex(txt ^ key)
+    return result[2:-1]
 
-def genkey(a,b):
-    return b * (len(a) / 2)
+def genkey(txt,key):
+    return key * (len(txt) / 2)
 
-def scharxor(a):
-    a = a.rstrip()
+def scharxor(txt):
+    txt = txt.rstrip()
     best_score = 0
     best_str = ""
     for i in range(256):
-        key = genkey(a,hex(i)[2:])
+        key = genkey(txt,hex(i)[2:])
         try:
-            curr_str = xor(a,key).decode("hex")
+            curr_str = xor(txt,key).decode("hex")
         except:
             continue
         curr_score = score(curr_str)
